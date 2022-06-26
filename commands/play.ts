@@ -1,15 +1,15 @@
 import { MessageEmbed } from "discord.js";
 import { ICommand } from "wokcommands";
 import { search, stream as playstream } from "play-dl";
-
-// Functions
-import { formatDuration, formatViews } from "../common";
 import {
   createAudioPlayer,
   createAudioResource,
   joinVoiceChannel,
 } from "@discordjs/voice";
-import { client } from "..";
+
+// Common Functions
+import { formatDuration, formatViews } from "../common";
+
 export default {
   category: "Music",
   description: "Play or resume music",
@@ -93,6 +93,7 @@ export default {
         adapterCreator: messageChannel.guild.voiceAdapterCreator,
       });
 
+      // Subscribe to player and play song
       connection.subscribe(player);
       player.play(resource);
       connection.setSpeaking(true);
