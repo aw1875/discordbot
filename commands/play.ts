@@ -9,6 +9,7 @@ import {
 
 // Common Functions
 import { formatDuration, formatViews } from "../common";
+import { player } from "../index";
 
 export default {
   category: "Music",
@@ -16,6 +17,16 @@ export default {
   callback: async ({ message }) => {
     if (!message) return;
     if (message.channel.type === "DM") return;
+    if (player.state.status === "playing") {
+      const embed = new MessageEmbed()
+        .setColor("#f20000")
+        .addField("Error", "Player is already playing a song", true);
+
+      message.reply({
+        embeds: [embed],
+      });
+      return;
+    }
 
     // Get passed in args
     const [, ...args] = message.content.split(" ");
@@ -30,6 +41,21 @@ export default {
         .addField("Error", "Please join a voice channel first.", false);
 
       message.reply({
+        embeds: [embed],
+      });
+
+      return;
+    }
+
+    // Check if player is playing
+    if (player.state.status === "paused") {
+      player.unpause();
+
+      const embed = new MessageEmbed()
+        .setColor("#f3ab3f")
+        .addField("Status", "Music player has resumed playing");
+
+      messageChannel.send({
         embeds: [embed],
       });
 
@@ -82,9 +108,6 @@ export default {
       const resource = createAudioResource(stream, {
         inputType: type,
       });
-
-      // Create Audio Player
-      const player = createAudioPlayer();
 
       // Join Voince Channel
       const connection = joinVoiceChannel({

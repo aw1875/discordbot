@@ -6,12 +6,10 @@ export const formatDuration = (duration: number): string => {
 };
 
 export const formatViews = (views: number): string => {
-  if (views >= 1000 && views <= 1000000) {
-    const thousands = views / 1000;
-  if (views >= 1000 && views <= 1000000) {;
+  if (views >= 1000 && views < 1000000) {
+    return `${Math.floor(views / 1000).toFixed(1)}K`;
   } else if (views >= 1000000) {
-    const millions = views / 1000000;
-    return `${millions.toFixed(1)}M`;
+    return `${Math.floor(views / 1000000).toFixed(1)}M`;
   } else {
     return views.toString();
   }
